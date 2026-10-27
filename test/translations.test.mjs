@@ -6,11 +6,11 @@ import {
   baseEnglish
 } from '../src/constants/translations.ts';
 
-test('Priority 2: Exactly 31 languages are configured (22 Indian + 8 International + English)', () => {
-  assert.equal(SUPPORTED_LANGUAGES.length, 31);
+test('Priority 2: Exactly 26 languages are configured (17 Indian + 8 International + English)', () => {
+  assert.equal(SUPPORTED_LANGUAGES.length, 26);
 
   const indian = SUPPORTED_LANGUAGES.filter(l => l.category === 'indian');
-  assert.equal(indian.length, 22);
+  assert.equal(indian.length, 17);
 
   const international = SUPPORTED_LANGUAGES.filter(l => l.category === 'international');
   assert.equal(international.length, 8);
@@ -18,6 +18,16 @@ test('Priority 2: Exactly 31 languages are configured (22 Indian + 8 Internation
   const defaultLang = SUPPORTED_LANGUAGES.filter(l => l.category === 'default');
   assert.equal(defaultLang.length, 1);
   assert.equal(defaultLang[0].code, 'en');
+
+  // Verify removed languages are absent
+  const removedCodes = ['kn', 'ml', 'pa', 'or', 'as'];
+  for (const code of removedCodes) {
+    assert.equal(
+      SUPPORTED_LANGUAGES.some(l => l.code === code),
+      false,
+      `Language ${code} should be removed`
+    );
+  }
 });
 
 test('Priority 2: RTL languages (Urdu, Arabic) have isRtl set to true', () => {

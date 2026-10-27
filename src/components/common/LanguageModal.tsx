@@ -24,6 +24,10 @@ export const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose })
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'indian' | 'international'>('all');
 
+  const totalCount = SUPPORTED_LANGUAGES.length;
+  const indianCount = SUPPORTED_LANGUAGES.filter(l => l.category === 'indian').length;
+  const intlCount = SUPPORTED_LANGUAGES.filter(l => l.category === 'international').length;
+
   if (!isOpen) return null;
 
   const filteredLanguages = SUPPORTED_LANGUAGES.filter(lang => {
@@ -61,7 +65,7 @@ export const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose })
                 Select Interface Language / மொழியைத் தேர்ந்தெடுங்கள்
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                31 Total Languages: 22 Eighth Schedule Indian Languages + 8 Global Languages
+                {totalCount} Total Languages: {indianCount} Indian Regional Languages + {intlCount} Global Languages
               </p>
             </div>
           </div>
@@ -96,7 +100,7 @@ export const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose })
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              All Languages (31)
+              All Languages ({totalCount})
             </button>
             <button
               onClick={() => setActiveTab('indian')}
@@ -106,7 +110,7 @@ export const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose })
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              🇮🇳 Indian (22)
+              🇮🇳 Indian ({indianCount})
             </button>
             <button
               onClick={() => setActiveTab('international')}
@@ -116,7 +120,7 @@ export const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose })
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              🌍 International (8)
+              🌍 International ({intlCount})
             </button>
           </div>
         </div>

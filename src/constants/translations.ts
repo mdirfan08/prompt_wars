@@ -4,18 +4,13 @@ export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
   // Default
   { code: 'en', name: 'English', nativeName: 'English', script: 'Latin', category: 'default', voiceSupported: true },
 
-  // 22 Constitutionally Recognized Indian Languages (Eighth Schedule)
+  // Indian Languages
   { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', script: 'Tamil', category: 'indian', voiceSupported: true },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', script: 'Devanagari', category: 'indian', voiceSupported: true },
   { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', script: 'Bengali', category: 'indian', voiceSupported: true },
   { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', script: 'Telugu', category: 'indian', voiceSupported: true },
   { code: 'mr', name: 'Marathi', nativeName: 'मराठी', script: 'Devanagari', category: 'indian', voiceSupported: true },
   { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી', script: 'Gujarati', category: 'indian', voiceSupported: true },
-  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', script: 'Kannada', category: 'indian', voiceSupported: true },
-  { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', script: 'Malayalam', category: 'indian', voiceSupported: true },
-  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', script: 'Gurmukhi', category: 'indian', voiceSupported: true },
-  { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', script: 'Odia', category: 'indian', voiceSupported: false },
-  { code: 'as', name: 'Assamese', nativeName: 'অসমীয়া', script: 'Bengali-Assamese', category: 'indian', voiceSupported: false },
   { code: 'ur', name: 'Urdu', nativeName: 'اردو', script: 'Arabic-Nastaliq', isRtl: true, category: 'indian', voiceSupported: true },
   { code: 'ne', name: 'Nepali', nativeName: 'नेपाली', script: 'Devanagari', category: 'indian', voiceSupported: true },
   { code: 'sa', name: 'Sanskrit', nativeName: 'संस्कृतम्', script: 'Devanagari', category: 'indian', voiceSupported: false },

@@ -140,4 +140,10 @@ test('Priority 1 & 2: Speech locale mapping check', () => {
   assert.equal(SPEECH_LOCALE_MAP['es'].locale, 'es-ES');
   assert.equal(isVoiceSupportedForLanguage('ta'), true);
   assert.equal(isVoiceSupportedForLanguage('hi'), true);
+
+  // Verify removed languages are absent from speech locale map
+  const removedCodes = ['kn', 'ml', 'pa', 'or', 'as'];
+  for (const code of removedCodes) {
+    assert.equal(SPEECH_LOCALE_MAP[code], undefined, `Speech locale for ${code} should be removed`);
+  }
 });

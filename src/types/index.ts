@@ -2,23 +2,18 @@ export type IndustryType = 'construction' | 'facilities';
 
 export type Language =
   | 'en'
-  // 22 Indian languages in the Eighth Schedule of Constitution of India
-  | 'as' // Assamese
+  // 17 Indian languages
   | 'bn' // Bengali
   | 'brx' // Bodo
   | 'doi' // Dogri
   | 'gu' // Gujarati
   | 'hi' // Hindi
-  | 'kn' // Kannada
   | 'ks' // Kashmiri
   | 'kok' // Konkani
   | 'mai' // Maithili
-  | 'ml' // Malayalam
   | 'mni' // Manipuri (Meitei)
   | 'mr' // Marathi
   | 'ne' // Nepali
-  | 'or' // Odia
-  | 'pa' // Punjabi
   | 'sa' // Sanskrit
   | 'sat' // Santali
   | 'sd' // Sindhi
