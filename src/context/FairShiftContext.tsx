@@ -5,6 +5,7 @@ import {
   SafetyReport,
   IndustryType,
   Language,
+  Theme,
   ReportStatus,
   FairnessThresholds,
   AuditEvent,
@@ -17,6 +18,7 @@ import {
   industryConfigs
 } from '../constants/industryData';
 import { calculateElapsedHours, calculatePay } from '../utils/calculations';
+import { SUPPORTED_LANGUAGES } from '../constants/translations';
 
 interface ToastState {
   id: string;
@@ -32,6 +34,9 @@ interface FairShiftContextType {
   setIndustry: (ind: IndustryType) => void;
   language: Language;
   setLanguage: (lang: Language) => void;
+  theme: Theme;
+  setTheme: (t: Theme) => void;
+  toggleTheme: () => void;
   currentWorker: Worker;
   setCurrentWorkerId: (id: string) => void;
   
@@ -85,13 +90,72 @@ const defaultThresholds: FairnessThresholds = {
 const FairShiftContext = createContext<FairShiftContextType | undefined>(undefined);
 
 export const FairShiftProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state from localStorage if available, otherwise default
+  // Navigation & Persona
   const [portal, setPortal] = useState<'worker' | 'admin'>('worker');
   const [industry, setIndustryState] = useState<IndustryType>('construction');
-  const [language, setLanguage] = useState<Language>('en');
   const [currentWorkerId, setCurrentWorkerId] = useState<string>('w-c1');
   const [toast, setToast] = useState<ToastState | null>(null);
 
+  // Theme state: default to system or saved preference
+  const [theme, setThemeState] = useState<Theme>(() => {
+    try {
+      const saved = localStorage.getItem('fairshift_theme') as Theme;
+      if (saved === 'dark' || saved === 'light') return saved;
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch {}
+    return 'light';
+  });
+
+  // Apply theme to DOM
+  useEffect(() => {
+    try {
+      localStorage.setItem('fairshift_theme', theme);
+    } catch {}
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+  };
+
+  const toggleTheme = () => {
+    setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  // Language state: default to saved or English
+  const [language, setLanguageState] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem('fairshift_language') as Language;
+      if (saved) return saved;
+    } catch {}
+    return 'en';
+  });
+
+  const setLanguage = (newLang: Language) => {
+    setLanguageState(newLang);
+    try {
+      localStorage.setItem('fairshift_language', newLang);
+    } catch {}
+  };
+
+  // Synchronize RTL and lang tag on HTML
+  useEffect(() => {
+    const meta = SUPPORTED_LANGUAGES.find(l => l.code === language);
+    if (meta?.isRtl) {
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
+    document.documentElement.setAttribute('lang', language);
+  }, [language]);
+
+  // Core Data Stores
   const [workers, setWorkers] = useState<Worker[]>(() => {
     try {
       const saved = localStorage.getItem(`${STORAGE_KEY}_workers`);
@@ -190,7 +254,7 @@ export const FairShiftProvider: React.FC<{ children: ReactNode }> = ({ children 
       clockIn: nowIso,
       clockOut: null,
       breakMinutes: 0,
-      hoursWorked: 0.05, // initial fraction
+      hoursWorked: 0.05,
       regularHours: 0.05,
       overtimeHours: 0,
       workArea: assignedArea,
@@ -428,6 +492,9 @@ export const FairShiftProvider: React.FC<{ children: ReactNode }> = ({ children 
         setIndustry,
         language,
         setLanguage,
+        theme,
+        setTheme,
+        toggleTheme,
         currentWorker,
         setCurrentWorkerId,
         workers,

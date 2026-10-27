@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFairShift } from '../../context/FairShiftContext';
-import { translations } from '../../constants/translations';
+import { translations, getTranslation } from '../../constants/translations';
 import { industryConfigs } from '../../constants/industryData';
 import { SafetyReport, ReportStatus } from '../../types';
 import { formatTimeAgo } from '../../utils/calculations';
@@ -23,7 +23,7 @@ import {
 
 export const SafetyCommandCenter: React.FC = () => {
   const { reports, thresholds, industry, language, updateReportStatus } = useFairShift();
-  const t = translations[language];
+  const t = getTranslation(language);
   const config = industryConfigs[industry];
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -75,49 +75,49 @@ export const SafetyCommandCenter: React.FC = () => {
   const severityBadge = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-200 text-rose-950 uppercase border border-rose-300">Critical</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-200 dark:bg-rose-900 text-rose-950 dark:text-rose-100 uppercase border border-rose-300 dark:border-rose-700">Critical</span>;
       case 'high':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-800 uppercase">High</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 uppercase">High</span>;
       case 'medium':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 uppercase">Medium</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 uppercase">Medium</span>;
       default:
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase">Low</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 uppercase">Low</span>;
     }
   };
 
   const statusBadge = (status: ReportStatus) => {
     switch (status) {
       case 'submitted':
-        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">{t.statusSubmitted}</span>;
+        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300">{t.statusSubmitted}</span>;
       case 'acknowledged':
-        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">{t.statusAcknowledged}</span>;
+        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300">{t.statusAcknowledged}</span>;
       case 'investigating':
-        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800">{t.statusInvestigating}</span>;
+        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300">{t.statusInvestigating}</span>;
       case 'resolved':
-        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">{t.statusResolved}</span>;
+        return <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">{t.statusResolved}</span>;
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Safety Command Center Header */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-sm transition">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-bold mb-2">
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>{t.adminSafety}</span>
             </div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Safety Incident Queue — Proof of Action
             </h2>
-            <p className="text-sm text-slate-500 mt-1 max-w-xl">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
               Every reported hazard triggers an accountable verification lifecycle with timestamped supervisor responses.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-xl">
               {filteredReports.length} Incidents Displayed
             </span>
           </div>
@@ -129,7 +129,7 @@ export const SafetyCommandCenter: React.FC = () => {
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              className="w-full bg-slate-50 text-slate-900 text-xs font-semibold rounded-xl border border-slate-200 px-3 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+              className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
             >
               <option value="ALL">Filter by Status: All Statuses</option>
               <option value="submitted">Submitted (Awaiting Action)</option>
@@ -144,7 +144,7 @@ export const SafetyCommandCenter: React.FC = () => {
             <select
               value={severityFilter}
               onChange={e => setSeverityFilter(e.target.value)}
-              className="w-full bg-slate-50 text-slate-900 text-xs font-semibold rounded-xl border border-slate-200 px-3 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+              className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
             >
               <option value="ALL">Filter by Severity: All Severities</option>
               <option value="critical">Critical</option>
@@ -160,8 +160,8 @@ export const SafetyCommandCenter: React.FC = () => {
       {/* Incident Queue List */}
       <div className="space-y-4">
         {filteredReports.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm text-slate-400 text-xs">
-            <ShieldAlert className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center border border-slate-200/90 dark:border-slate-800 shadow-sm text-slate-400 dark:text-slate-500 text-xs">
+            <ShieldAlert className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
             No safety incidents match the selected criteria.
           </div>
         ) : (
@@ -172,30 +172,30 @@ export const SafetyCommandCenter: React.FC = () => {
             return (
               <div
                 key={report.id}
-                className={`bg-white rounded-3xl p-6 border transition shadow-sm hover:shadow-md ${
+                className={`bg-white dark:bg-slate-900 rounded-3xl p-6 border transition shadow-sm hover:shadow-md ${
                   isOverdue
-                    ? 'border-rose-300 bg-rose-50/10'
+                    ? 'border-rose-300 dark:border-rose-800 bg-rose-50/10 dark:bg-rose-950/20'
                     : report.currentStatus === 'resolved'
-                    ? 'border-slate-200/80 bg-slate-50/20'
-                    : 'border-slate-200/90'
+                    ? 'border-slate-200/80 dark:border-slate-800/80 bg-slate-50/20 dark:bg-slate-800/20'
+                    : 'border-slate-200/90 dark:border-slate-800'
                 }`}
               >
                 {/* Header row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono font-black text-xs bg-slate-900 text-white px-2.5 py-1 rounded-lg">
+                    <span className="font-mono font-black text-xs bg-slate-900 dark:bg-slate-800 text-white px-2.5 py-1 rounded-lg">
                       #{report.id}
                     </span>
                     {severityBadge(report.severity)}
                     {statusBadge(report.currentStatus)}
 
                     {report.isAnonymous ? (
-                      <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
-                        <EyeOff className="w-3 h-3 text-slate-500" /> Anonymous Worker
+                      <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                        <EyeOff className="w-3 h-3 text-slate-500 dark:text-slate-400" /> Anonymous Worker
                       </span>
                     ) : (
-                      <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
-                        <User className="w-3 h-3 text-slate-500" /> {report.workerName}
+                      <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                        <User className="w-3 h-3 text-slate-500 dark:text-slate-400" /> {report.workerName}
                       </span>
                     )}
 
@@ -206,40 +206,40 @@ export const SafetyCommandCenter: React.FC = () => {
                     )}
                   </div>
 
-                  <span className="text-xs text-slate-400 font-medium">
+                  <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
                     Reported {timeInfo.label}
                   </span>
                 </div>
 
                 {/* Body row */}
                 <div className="mb-4">
-                  <h3 className="font-extrabold text-slate-900 text-base mb-1">{report.category}</h3>
-                  <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100 italic">
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-base mb-1">{report.category}</h3>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-800 italic">
                     "{report.description}"
                   </p>
-                  <div className="flex items-center gap-4 text-xs text-slate-500 mt-2 font-medium">
+                  <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
                     <span className="flex items-center gap-1">
                       <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                      Zone: <strong className="text-slate-800">{report.workArea}</strong>
+                      Zone: <strong className="text-slate-800 dark:text-slate-200">{report.workArea}</strong>
                     </span>
                     {report.voiceTranscriptUsed && (
-                      <span className="text-teal-700 font-bold">🎙️ Voice Transcribed</span>
+                      <span className="text-teal-700 dark:text-teal-400 font-bold">🎙️ Voice Transcribed</span>
                     )}
                   </div>
                 </div>
 
                 {/* Audit trail summary */}
-                <div className="mb-4 p-3 bg-slate-100/60 rounded-2xl border border-slate-200/60 text-xs">
-                  <span className="font-bold text-slate-700 text-[11px] uppercase tracking-wider block mb-1.5">
+                <div className="mb-4 p-3 bg-slate-100/60 dark:bg-slate-800/50 rounded-2xl border border-slate-200/60 dark:border-slate-800 text-xs">
+                  <span className="font-bold text-slate-700 dark:text-slate-300 text-[11px] uppercase tracking-wider block mb-1.5">
                     Proof of Action Timeline ({report.timeline.length} Events)
                   </span>
                   <div className="space-y-1">
                     {report.timeline.slice(-2).map((ev, i) => (
-                      <div key={i} className="flex items-center justify-between text-slate-600 text-[11px]">
+                      <div key={i} className="flex items-center justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                         <span>
-                          <strong className="text-slate-900">[{ev.newStatus.toUpperCase()}]</strong> by {ev.actorName}: {ev.notes}
+                          <strong className="text-slate-900 dark:text-white">[{ev.newStatus.toUpperCase()}]</strong> by {ev.actorName}: {ev.notes}
                         </span>
-                        <span className="font-mono text-slate-400">
+                        <span className="font-mono text-slate-400 dark:text-slate-500">
                           {new Date(ev.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
@@ -247,10 +247,10 @@ export const SafetyCommandCenter: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Management Action Buttons (Proof of Action Transitions) */}
-                <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-xs text-slate-500 font-medium">
-                    Assigned: <strong className="text-slate-800">{report.assignedAdmin || 'Unassigned'}</strong>
+                {/* Management Action Buttons */}
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    Assigned: <strong className="text-slate-800 dark:text-slate-200">{report.assignedAdmin || 'Unassigned'}</strong>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export const SafetyCommandCenter: React.FC = () => {
                     )}
 
                     {report.currentStatus === 'resolved' && (
-                      <span className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-xs flex items-center gap-1">
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Audit Sealed & Resolved
                       </span>
                     )}
@@ -299,19 +299,19 @@ export const SafetyCommandCenter: React.FC = () => {
       {/* Proof of Action Transition Modal */}
       {activeReportForStatus && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 text-slate-900 shadow-2xl animate-in zoom-in-95 duration-150 border border-slate-100">
-            <div className="flex items-start justify-between pb-3 border-b border-slate-100 mb-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 text-slate-900 dark:text-white shadow-2xl animate-in zoom-in-95 duration-150 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
               <div>
-                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
                   Proof of Action Transition
                 </span>
-                <h3 className="text-lg font-extrabold text-slate-900">
+                <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">
                   Advancing Incident #{activeReportForStatus.id} to [{targetStatus.toUpperCase()}]
                 </h3>
               </div>
               <button
                 onClick={() => setActiveReportForStatus(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
+                className="p-1 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -320,13 +320,13 @@ export const SafetyCommandCenter: React.FC = () => {
             <div className="space-y-4 text-xs">
               {/* Supervisor Selector */}
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   {t.adminNameLabel}
                 </label>
                 <select
                   value={supervisorName}
                   onChange={e => setSupervisorName(e.target.value)}
-                  className="w-full bg-slate-50 text-slate-900 text-xs font-semibold rounded-xl border border-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {config.adminRoles.map(role => (
                     <option key={role} value={role}>
@@ -338,7 +338,7 @@ export const SafetyCommandCenter: React.FC = () => {
 
               {/* Action Taken / Resolution Notes */}
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   {t.resolutionNotesLabel}
                 </label>
                 <textarea
@@ -346,20 +346,20 @@ export const SafetyCommandCenter: React.FC = () => {
                   value={resolutionNotes}
                   onChange={e => setResolutionNotes(e.target.value)}
                   placeholder="Detail the physical inspection, root-cause isolation, or contractor repair undertaken..."
-                  className="w-full bg-slate-50 text-slate-900 text-xs rounded-xl border border-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs rounded-xl border border-slate-200 dark:border-slate-700 p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-500 leading-relaxed text-[11px]">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 leading-relaxed text-[11px]">
                 <strong>Compliance Note:</strong> This timestamp and manager identity will be immutably sealed into the worker's personal Proof of Action history.
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+            <div className="mt-6 flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
               <button
                 onClick={() => setActiveReportForStatus(null)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
               >
                 Cancel
               </button>

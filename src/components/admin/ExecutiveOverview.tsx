@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFairShift } from '../../context/FairShiftContext';
-import { translations } from '../../constants/translations';
+import { translations, getTranslation } from '../../constants/translations';
 import { industryConfigs } from '../../constants/industryData';
 import { analyzeFairnessRadar } from '../../utils/fairnessRadar';
 import {
@@ -21,7 +21,7 @@ interface ExecutiveOverviewProps {
 
 export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate }) => {
   const { workers, shifts, reports, thresholds, industry, language } = useFairShift();
-  const t = translations[language];
+  const t = getTranslation(language);
   const config = industryConfigs[industry];
 
   // Derive metrics strictly from actual records for this industry
@@ -47,7 +47,6 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
   const highRiskFindings = findings.filter(f => f.severity === 'high');
 
   // Workforce health score: derived deterministically
-  // 100 - (excessive shifts * 5) - (open reports * 8) - (high risk * 10)
   const healthScore = Math.max(
     40,
     Math.min(100, Math.round(100 - excessiveShifts.length * 4 - openReports.length * 6 - highRiskFindings.length * 8))
@@ -56,7 +55,7 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-slate-900 dark:bg-slate-950 rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 transition">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-teal-400 text-xs font-semibold mb-3 border border-slate-700">
             <Activity className="w-3.5 h-3.5" />
@@ -71,7 +70,7 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         </div>
 
         {/* Workforce Health Index */}
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center sm:min-w-[200px]">
+        <div className="p-5 rounded-2xl bg-slate-950/80 dark:bg-[#070B14] border border-slate-800 text-center sm:min-w-[200px]">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             {t.workforceHealth}
           </span>
@@ -89,16 +88,16 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Total Workforce */}
         <div
           onClick={() => onNavigate('workforce')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.totalWorkforce}</span>
-            <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.totalWorkforce}</span>
+            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-slate-900">{totalWorkforce} Workers</div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <div className="text-3xl font-black text-slate-900 dark:text-white">{totalWorkforce} Workers</div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>{indWorkers.map(w => w.name.split(' ')[0]).join(', ')}</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -107,18 +106,18 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Currently On Shift */}
         <div
           onClick={() => onNavigate('workforce')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.currentlyOnShift}</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.currentlyOnShift}</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition">
               <HardHat className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-emerald-700 font-mono">
+          <div className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">
             {onShiftWorkers.length} Active
           </div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>{((onShiftWorkers.length / totalWorkforce) * 100).toFixed(0)}% site presence</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -127,18 +126,18 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Excessive Hours Alerts */}
         <div
           onClick={() => onNavigate('fairness')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.excessiveHoursAlerts}</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.excessiveHoursAlerts}</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center group-hover:scale-110 transition">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-amber-700 font-mono">
+          <div className="text-3xl font-black text-amber-700 dark:text-amber-400 font-mono">
             {excessiveShifts.length} Shifts
           </div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>Exceeds {thresholds.maxDailyHours}h daily limit</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -147,18 +146,18 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Open Safety Incidents */}
         <div
           onClick={() => onNavigate('safety')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.openIncidents}</span>
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.openIncidents}</span>
+            <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center group-hover:scale-110 transition">
               <ShieldAlert className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-rose-700 font-mono">
+          <div className="text-3xl font-black text-rose-700 dark:text-rose-400 font-mono">
             {openReports.length} Unresolved
           </div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>Proof of Action active</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -167,18 +166,18 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Average Shift Length */}
         <div
           onClick={() => onNavigate('workforce')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.avgShiftLength}</span>
-            <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.avgShiftLength}</span>
+            <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center group-hover:scale-110 transition">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-slate-900 font-mono">
+          <div className="text-3xl font-black text-slate-900 dark:text-white font-mono">
             {avgShiftDuration} Hours
           </div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>Across {completedShifts.length} completed shifts</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -187,18 +186,18 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         {/* Fairness Radar Findings */}
         <div
           onClick={() => onNavigate('fairness')}
-          className="bg-white rounded-2xl p-5 border border-purple-200/90 shadow-sm hover:shadow-md transition cursor-pointer group bg-gradient-to-b from-purple-50/20 to-transparent"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-200/90 dark:border-purple-900/60 shadow-sm hover:shadow-md transition cursor-pointer group bg-gradient-to-b from-purple-50/20 dark:from-purple-950/20 to-transparent"
         >
-          <div className="flex items-center justify-between mb-3 text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-700">Fairness Radar</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between mb-3 text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-400">Fairness Radar</span>
+            <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-3xl font-black text-purple-900 font-mono">
+          <div className="text-3xl font-black text-purple-900 dark:text-purple-200 font-mono">
             {findings.length} Signals
           </div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>{highRiskFindings.length} High Risk findings</span>
             <ArrowRight className="w-3 h-3 text-purple-500 group-hover:translate-x-0.5 transition" />
           </p>
@@ -208,15 +207,15 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
       {/* Quick Summary Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Urgent Action Queue Preview */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm transition">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-rose-600" />
-              <h3 className="font-bold text-slate-900 text-sm">Prioritized Incident Queue</h3>
+              <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm">Prioritized Incident Queue</h3>
             </div>
             <button
               onClick={() => onNavigate('safety')}
-              className="text-xs font-bold text-teal-600 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1"
             >
               Open Safety Center <ArrowRight className="w-3 h-3" />
             </button>
@@ -224,21 +223,21 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
 
           <div className="space-y-3">
             {openReports.length === 0 ? (
-              <p className="text-xs text-slate-400 py-4 text-center">No open incidents currently pending.</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 py-4 text-center">No open incidents currently pending.</p>
             ) : (
               openReports.slice(0, 3).map(r => (
-                <div key={r.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start justify-between gap-3">
+                <div key={r.id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-mono font-bold text-[11px] bg-slate-200 text-slate-800 px-1.5 py-0.2 rounded">
+                      <span className="font-mono font-bold text-[11px] bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-1.5 py-0.2 rounded">
                         #{r.id}
                       </span>
-                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.2 rounded-full bg-rose-100 text-rose-800">
+                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.2 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300">
                         {r.severity}
                       </span>
-                      <span className="text-xs text-slate-500">{r.workArea}</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">{r.workArea}</span>
                     </div>
-                    <p className="text-xs text-slate-700 font-medium line-clamp-1">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-medium line-clamp-1">
                       {r.description}
                     </p>
                   </div>
@@ -252,7 +251,7 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
         </div>
 
         {/* Explainable Fairness Rule Engine Callout */}
-        <div className="bg-slate-900 text-white rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="bg-slate-900 dark:bg-slate-950 text-white rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col justify-between">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/20">
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -261,7 +260,7 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ onNavigate
             <h3 className="font-bold text-white text-base mb-2">
               Explainable Decision Support (UN SDG 8.8)
             </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-300 dark:text-slate-400 leading-relaxed">
               FairShift avoids black-box algorithms or opaque employee scoring. Every fatigue alert, overtime disparity warning, and repeat hazard notice is supported by exact timestamped shifts and verifiable work-area records.
             </p>
           </div>

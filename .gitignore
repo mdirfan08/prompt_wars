@@ -1,5 +1,34 @@
+# Logs and debug
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
 node_modules
 dist
 dist-ssr
+build
+.cache
+
+# Environment variables & secrets
+.env
+.env.production
+.env.development
+.env.local
+.env.*.local
 *.local
+
+# Editor & OS files
 .DS_Store
+Thumbs.db
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

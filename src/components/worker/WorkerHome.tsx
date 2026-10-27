@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFairShift } from '../../context/FairShiftContext';
-import { translations } from '../../constants/translations';
+import { translations, getTranslation } from '../../constants/translations';
 import { industryConfigs } from '../../constants/industryData';
 import { calculateElapsedHours, calculatePay, formatDuration } from '../../utils/calculations';
 import {
@@ -23,7 +23,7 @@ interface WorkerHomeProps {
 
 export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
   const { currentWorker, shifts, reports, industry, language, clockIn, clockOut, toggleBreak } = useFairShift();
-  const t = translations[language];
+  const t = getTranslation(language);
 
   // Dynamic greeting based on hour
   const hour = new Date().getHours();
@@ -65,7 +65,7 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-6">
       {/* Personalized Welcome Hero */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 dark:from-slate-950 dark:via-slate-900 dark:to-[#070B14] rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl relative overflow-hidden transition">
         {/* Subtle background glow */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -166,16 +166,16 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
         {/* Today's Logged Hours */}
         <div
           onClick={() => onNavigate('attendance')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.todayWorked}</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.todayWorked}</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">{formatDuration(totalTodayHours)}</div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <div className="text-2xl font-black text-slate-900 dark:text-white">{formatDuration(totalTodayHours)}</div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>{totalTodayHours >= 8 ? 'Standard shift completed' : 'Standard 8h limit'}</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -184,16 +184,16 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
         {/* Today's Estimated Earnings */}
         <div
           onClick={() => onNavigate('pay')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.estimatedTodayPay}</span>
-            <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.estimatedTodayPay}</span>
+            <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center group-hover:scale-110 transition">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">₹{payEst.grossPay}</div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <div className="text-2xl font-black text-slate-900 dark:text-white">₹{payEst.grossPay}</div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>₹{currentWorker.hourlyRate}/hr base rate</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -202,16 +202,16 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
         {/* SpeakUp Shield Quick Action */}
         <div
           onClick={() => onNavigate('speakup')}
-          className="bg-white rounded-2xl p-5 border border-amber-200/90 shadow-sm hover:shadow-md transition cursor-pointer group bg-gradient-to-b from-amber-50/20 to-transparent"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-amber-200/90 dark:border-amber-900/60 shadow-sm hover:shadow-md transition cursor-pointer group bg-gradient-to-b from-amber-50/20 dark:from-amber-950/20 to-transparent"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-700">{t.navSpeakUp}</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">{t.navSpeakUp}</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center group-hover:scale-110 transition">
               <ShieldAlert className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-lg font-bold text-slate-900">Report a Hazard</div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <div className="text-lg font-bold text-slate-900 dark:text-white">Report a Hazard</div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>Voice / Text with Anonymous mode</span>
             <ArrowRight className="w-3 h-3 text-amber-500 group-hover:translate-x-0.5 transition" />
           </p>
@@ -220,16 +220,16 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
         {/* Proof of Action Active Reports */}
         <div
           onClick={() => onNavigate('reports')}
-          className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition cursor-pointer group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition cursor-pointer group"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">{t.openReportsCount}</span>
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">{t.openReportsCount}</span>
+            <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center group-hover:scale-110 transition">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">{openReportsCount} Incidents</div>
-          <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+          <div className="text-2xl font-black text-slate-900 dark:text-white">{openReportsCount} Incidents</div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1">
             <span>{t.navReports} tracking</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition" />
           </p>
@@ -239,22 +239,22 @@ export const WorkerHome: React.FC<WorkerHomeProps> = ({ onNavigate }) => {
       {/* Honest Prototype Notice & Shift Schedule Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Next Shift Info */}
-        <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex items-start gap-3">
-          <Calendar className="w-5 h-5 text-teal-600 shrink-0 mt-0.5" />
+        <div className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex items-start gap-3">
+          <Calendar className="w-5 h-5 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-bold text-slate-900 text-sm">{t.nextShift}</h4>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <h4 className="font-bold text-slate-900 dark:text-white text-sm">{t.nextShift}</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               Tomorrow: 08:00 - 16:30 • {currentWorker.workArea} (Standard 8.0h Shift + 30m meal break)
             </p>
           </div>
         </div>
 
         {/* Transparency & UN SDG 8 Note */}
-        <div className="bg-emerald-50/50 rounded-2xl p-5 border border-emerald-200/60 flex items-start gap-3">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/30 rounded-2xl p-5 border border-emerald-200/60 dark:border-emerald-800/60 flex items-start gap-3">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-bold text-emerald-950 text-sm">UN SDG 8: Decent Work & Economic Growth</h4>
-            <p className="text-xs text-emerald-800/90 mt-0.5">
+            <h4 className="font-bold text-emerald-950 dark:text-emerald-200 text-sm">UN SDG 8: Decent Work & Economic Growth</h4>
+            <p className="text-xs text-emerald-800/90 dark:text-emerald-300/80 mt-0.5">
               {t.deviceNote}: All attendance records and hazard alerts are stored immutably in shared local state.
             </p>
           </div>

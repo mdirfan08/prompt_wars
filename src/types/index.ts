@@ -1,6 +1,41 @@
 export type IndustryType = 'construction' | 'facilities';
 
-export type Language = 'en' | 'ta';
+export type Language =
+  | 'en'
+  // 22 Indian languages in the Eighth Schedule of Constitution of India
+  | 'as' // Assamese
+  | 'bn' // Bengali
+  | 'brx' // Bodo
+  | 'doi' // Dogri
+  | 'gu' // Gujarati
+  | 'hi' // Hindi
+  | 'kn' // Kannada
+  | 'ks' // Kashmiri
+  | 'kok' // Konkani
+  | 'mai' // Maithili
+  | 'ml' // Malayalam
+  | 'mni' // Manipuri (Meitei)
+  | 'mr' // Marathi
+  | 'ne' // Nepali
+  | 'or' // Odia
+  | 'pa' // Punjabi
+  | 'sa' // Sanskrit
+  | 'sat' // Santali
+  | 'sd' // Sindhi
+  | 'ta' // Tamil
+  | 'te' // Telugu
+  | 'ur' // Urdu
+  // Additional International Languages
+  | 'es' // Spanish
+  | 'fr' // French
+  | 'de' // German
+  | 'ar' // Arabic
+  | 'id' // Indonesian
+  | 'pt' // Portuguese
+  | 'zh' // Chinese (Simplified)
+  | 'ja'; // Japanese
+
+export type Theme = 'light' | 'dark';
 
 export type AttendanceStatus = 'clocked_in' | 'clocked_out' | 'on_break';
 
@@ -131,4 +166,14 @@ export interface IndustryConfig {
     typicalSeverity: ReportSeverity;
   }[];
   adminRoles: string[];
+}
+
+export interface LanguageMeta {
+  code: Language;
+  name: string;
+  nativeName: string;
+  script: string;
+  isRtl?: boolean;
+  category: 'indian' | 'international' | 'default';
+  voiceSupported: boolean;
 }

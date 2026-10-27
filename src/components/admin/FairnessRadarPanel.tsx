@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFairShift } from '../../context/FairShiftContext';
-import { translations } from '../../constants/translations';
+import { translations, getTranslation } from '../../constants/translations';
 import { analyzeFairnessRadar } from '../../utils/fairnessRadar';
 import { FairnessFinding } from '../../types';
 import {
@@ -20,7 +20,7 @@ import {
 
 export const FairnessRadarPanel: React.FC = () => {
   const { workers, shifts, reports, thresholds, updateThresholds, industry, language } = useFairShift();
-  const t = translations[language];
+  const t = getTranslation(language);
 
   const findings = analyzeFairnessRadar(workers, shifts, reports, thresholds, industry);
   const [selectedFinding, setSelectedFinding] = useState<FairnessFinding | null>(findings[0] || null);
@@ -29,19 +29,19 @@ export const FairnessRadarPanel: React.FC = () => {
     switch (sev) {
       case 'high':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200 uppercase">
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800 uppercase">
             {t.severityBadgeHigh}
           </span>
         );
       case 'medium':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 uppercase">
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 uppercase">
             {t.severityBadgeMed}
           </span>
         );
       case 'low':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200 uppercase">
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 uppercase">
             {t.severityBadgeLow}
           </span>
         );
@@ -51,7 +51,7 @@ export const FairnessRadarPanel: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Fairness Radar Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 dark:from-slate-950 dark:via-slate-900 dark:to-[#170B24] rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl relative overflow-hidden transition">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold mb-3 border border-purple-500/30">
@@ -64,7 +64,7 @@ export const FairnessRadarPanel: React.FC = () => {
             <p className="text-sm text-slate-300 mt-1 max-w-xl">{t.radarSub}</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-center sm:min-w-[180px]">
+          <div className="p-4 rounded-2xl bg-slate-950/80 dark:bg-[#070B14] border border-slate-800 text-center sm:min-w-[180px]">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
               {t.findingsCount}
             </span>
@@ -85,18 +85,18 @@ export const FairnessRadarPanel: React.FC = () => {
       </div>
 
       {/* Configurable Threshold Sliders */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
-        <div className="flex items-center gap-2 pb-3 border-b border-slate-100 mb-6">
-          <Sliders className="w-4 h-4 text-slate-700" />
-          <h3 className="font-bold text-slate-900 text-sm">{t.thresholdConfig}</h3>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-sm transition">
+        <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800 mb-6">
+          <Sliders className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+          <h3 className="font-bold text-slate-900 dark:text-white text-sm">{t.thresholdConfig}</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Threshold 1: Max Daily Hours */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-slate-800">{t.maxDailyThresholdLabel}</span>
-              <span className="font-mono font-black text-purple-700 text-sm">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{t.maxDailyThresholdLabel}</span>
+              <span className="font-mono font-black text-purple-700 dark:text-purple-400 text-sm">
                 {thresholds.maxDailyHours} Hours
               </span>
             </div>
@@ -109,7 +109,7 @@ export const FairnessRadarPanel: React.FC = () => {
               onChange={e => updateThresholds({ maxDailyHours: Number(e.target.value) })}
               className="w-full accent-purple-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mt-1">
               <span>7h</span>
               <span>Default: 9h</span>
               <span>12h</span>
@@ -117,10 +117,10 @@ export const FairnessRadarPanel: React.FC = () => {
           </div>
 
           {/* Threshold 2: Overdue SLA Hours */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-slate-800">{t.overdueHoursLabel}</span>
-              <span className="font-mono font-black text-rose-700 text-sm">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{t.overdueHoursLabel}</span>
+              <span className="font-mono font-black text-rose-700 dark:text-rose-400 text-sm">
                 {thresholds.overdueReportHours} Hours
               </span>
             </div>
@@ -133,7 +133,7 @@ export const FairnessRadarPanel: React.FC = () => {
               onChange={e => updateThresholds({ overdueReportHours: Number(e.target.value) })}
               className="w-full accent-rose-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mt-1">
               <span>12h</span>
               <span>Default: 24h</span>
               <span>48h</span>
@@ -141,10 +141,10 @@ export const FairnessRadarPanel: React.FC = () => {
           </div>
 
           {/* Threshold 3: Repeated Hazard Count */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-slate-800">Repeated Incident Threshold</span>
-              <span className="font-mono font-black text-amber-700 text-sm">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Repeated Incident Threshold</span>
+              <span className="font-mono font-black text-amber-700 dark:text-amber-400 text-sm">
                 {thresholds.repeatedHazardThreshold} Reports
               </span>
             </div>
@@ -157,7 +157,7 @@ export const FairnessRadarPanel: React.FC = () => {
               onChange={e => updateThresholds({ repeatedHazardThreshold: Number(e.target.value) })}
               className="w-full accent-amber-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mt-1">
               <span>2 Reports</span>
               <span>Default: 2</span>
               <span>5 Reports</span>
@@ -171,7 +171,7 @@ export const FairnessRadarPanel: React.FC = () => {
         {/* Left Column: Prioritized Findings List */}
         <div className="lg:col-span-2 space-y-3">
           {findings.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm text-slate-400 text-xs">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center border border-slate-200/90 dark:border-slate-800 shadow-sm text-slate-400 dark:text-slate-500 text-xs">
               <CheckCircle2 className="w-10 h-10 mx-auto text-emerald-500 mb-2" />
               {t.noFindingsNotice}
             </div>
@@ -182,38 +182,38 @@ export const FairnessRadarPanel: React.FC = () => {
                 <div
                   key={finding.id}
                   onClick={() => setSelectedFinding(finding)}
-                  className={`bg-white rounded-2xl p-5 border transition cursor-pointer shadow-sm hover:shadow-md ${
+                  className={`bg-white dark:bg-slate-900 rounded-2xl p-5 border transition cursor-pointer shadow-sm hover:shadow-md ${
                     isSelected
                       ? 'border-purple-600 ring-2 ring-purple-600/20'
-                      : 'border-slate-200/90 hover:border-slate-300'
+                      : 'border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2">
                       {severityBadge(finding.severity)}
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                         {finding.type.replace('_', ' ')}
                       </span>
                     </div>
                     {finding.workArea && (
-                      <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
                         {finding.workArea}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="font-extrabold text-slate-900 text-sm mb-1">
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-sm mb-1">
                     {language === 'ta' ? finding.titleTa : finding.title}
                   </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-3">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2 mb-3">
                     {finding.summary}
                   </p>
 
-                  <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-100">
+                  <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <span className="font-mono text-[11px]">
                       Records: {finding.supportedRecordIds.join(', ')}
                     </span>
-                    <span className="text-purple-700 font-bold flex items-center gap-0.5">
+                    <span className="text-purple-700 dark:text-purple-400 font-bold flex items-center gap-0.5">
                       Inspect Evidence <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -224,66 +224,66 @@ export const FairnessRadarPanel: React.FC = () => {
         </div>
 
         {/* Right Column: Deep Explanation & Supporting Records Panel */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm h-fit">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100 mb-4">
-            <FileText className="w-4 h-4 text-purple-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Explainable Audit Breakdown</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm h-fit transition">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+            <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm">Explainable Audit Breakdown</h3>
           </div>
 
           {selectedFinding ? (
             <div className="space-y-4 text-xs">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-mono text-[10px] text-slate-400 uppercase font-bold">
+                  <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold">
                     Anomaly Ref: {selectedFinding.id}
                   </span>
                   {severityBadge(selectedFinding.severity)}
                 </div>
-                <h4 className="font-extrabold text-slate-900 text-sm">
+                <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
                   {selectedFinding.title}
                 </h4>
               </div>
 
               {/* Triggering Evidence */}
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-bold text-slate-800 uppercase tracking-wider text-[10px] block mb-1">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+                <span className="font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider text-[10px] block mb-1">
                   {t.evidenceHeader}
                 </span>
-                <p className="text-slate-700 font-mono text-[11px] leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-300 font-mono text-[11px] leading-relaxed">
                   {selectedFinding.evidence}
                 </p>
               </div>
 
               {/* Why This Matters */}
-              <div className="p-3.5 rounded-2xl bg-amber-50/60 border border-amber-200">
-                <span className="font-bold text-amber-900 uppercase tracking-wider text-[10px] block mb-1">
+              <div className="p-3.5 rounded-2xl bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60">
+                <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider text-[10px] block mb-1">
                   {t.whyItMattersHeader}
                 </span>
-                <p className="text-amber-800 leading-relaxed">
+                <p className="text-amber-800 dark:text-amber-200 leading-relaxed">
                   {selectedFinding.whyItMatters}
                 </p>
               </div>
 
               {/* Recommended Supervisor Action */}
-              <div className="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-200">
-                <span className="font-bold text-emerald-900 uppercase tracking-wider text-[10px] block mb-1">
+              <div className="p-3.5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60">
+                <span className="font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider text-[10px] block mb-1">
                   {t.recommendationHeader}
                 </span>
-                <p className="text-emerald-800 font-medium leading-relaxed">
+                <p className="text-emerald-800 dark:text-emerald-200 font-medium leading-relaxed">
                   {selectedFinding.recommendedAction}
                 </p>
               </div>
 
               {/* Supported Records Badge */}
-              <div className="pt-2 text-[11px] text-slate-500 flex items-center justify-between">
+              <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
                 <span>Verified Data Lineage:</span>
-                <span className="font-mono font-bold text-slate-800">
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
                   {selectedFinding.supportedRecordIds.length} Linked Records
                 </span>
               </div>
             </div>
           ) : (
-            <div className="py-12 text-center text-slate-400 text-xs">
+            <div className="py-12 text-center text-slate-400 dark:text-slate-500 text-xs">
               Select any finding to inspect its exact triggering record and audit trail.
             </div>
           )}

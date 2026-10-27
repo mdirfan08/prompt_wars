@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useFairShift } from '../../context/FairShiftContext';
-import { translations } from '../../constants/translations';
+import { translations, SUPPORTED_LANGUAGES } from '../../constants/translations';
 import { industryConfigs } from '../../constants/industryData';
+import { LanguageModal } from './LanguageModal';
 import {
   Shield,
   HardHat,
@@ -10,7 +11,9 @@ import {
   Globe,
   RotateCcw,
   Users,
-  AlertCircle
+  AlertCircle,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -20,7 +23,8 @@ export const Navbar: React.FC = () => {
     industry,
     setIndustry,
     language,
-    setLanguage,
+    theme,
+    toggleTheme,
     currentWorker,
     setCurrentWorkerId,
     workers,
@@ -29,6 +33,7 @@ export const Navbar: React.FC = () => {
   } = useFairShift();
 
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
   const t = translations[language];
 
   // Workers in currently selected industry
@@ -37,11 +42,13 @@ export const Navbar: React.FC = () => {
   // Unresolved reports count for current industry
   const openReports = reports.filter(r => r.industry === industry && r.currentStatus !== 'resolved').length;
 
+  const currentLangMeta = SUPPORTED_LANGUAGES.find(l => l.code === language) || SUPPORTED_LANGUAGES[0];
+
   return (
     <>
-      <header className="bg-slate-950 border-b border-slate-800 text-white sticky top-0 z-40 shadow-xl backdrop-blur-md">
+      <header className="bg-slate-950 dark:bg-[#070B14] border-b border-slate-800 dark:border-slate-800/80 text-white sticky top-0 z-40 shadow-xl backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-4">
+          <div className="flex items-center justify-between h-16 gap-3">
             {/* Logo and Brand */}
             <div className="flex items-center gap-3 shrink-0">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-900/30">
@@ -63,7 +70,7 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Portal Switcher (Center Tabs) */}
-            <nav aria-label="Portal Navigation" className="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+            <nav aria-label="Portal Navigation" className="flex items-center bg-slate-900/90 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-800">
               <button
                 onClick={() => setPortal('worker')}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -96,14 +103,38 @@ export const Navbar: React.FC = () => {
               </button>
             </nav>
 
-            {/* Right Controls: Industry Toggle, Worker Selector, Language, Reset */}
+            {/* Right Controls: Theme Toggle, Language Modal, Industry Toggle, Worker Selector, Reset */}
             <div className="flex items-center gap-2 sm:gap-2.5">
+              {/* Light / Dark Mode Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 dark:text-amber-300 border border-slate-800 hover:border-slate-700 transition"
+                title={theme === 'dark' ? t.themeLight : t.themeDark}
+                aria-label={theme === 'dark' ? t.themeLight : t.themeDark}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-indigo-300" />
+                )}
+              </button>
+
+              {/* Language Selector (31 Languages) */}
+              <button
+                onClick={() => setShowLanguageModal(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 hover:border-slate-700 text-xs font-bold transition"
+                title="Select Language / மொழியைத் தேர்ந்தெடுங்கள்"
+              >
+                <Globe className="w-3.5 h-3.5 text-teal-400" />
+                <span className="max-w-[70px] truncate">{currentLangMeta.nativeName}</span>
+              </button>
+
               {/* Industry Dropdown */}
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <select
                   value={industry}
                   onChange={e => setIndustry(e.target.value as 'construction' | 'facilities')}
-                  className="bg-slate-900 text-slate-200 text-xs font-medium rounded-lg border border-slate-700/80 px-2.5 py-1.5 pr-7 appearance-none cursor-pointer hover:border-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="bg-slate-900 text-slate-200 text-xs font-medium rounded-xl border border-slate-700/80 px-2.5 py-1.5 pr-7 appearance-none cursor-pointer hover:border-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   title="Switch Industry Configuration"
                 >
                   <option value="construction">🏗️ Construction Site</option>
@@ -114,11 +145,11 @@ export const Navbar: React.FC = () => {
 
               {/* Worker Persona Selector (Only visible in Worker Portal) */}
               {portal === 'worker' && (
-                <div className="relative hidden lg:block">
+                <div className="relative hidden xl:block">
                   <select
                     value={currentWorker.id}
                     onChange={e => setCurrentWorkerId(e.target.value)}
-                    className="bg-slate-900 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-900/50 px-2.5 py-1.5 pr-7 appearance-none cursor-pointer hover:border-emerald-700 focus:outline-none"
+                    className="bg-slate-900 text-emerald-400 text-xs font-semibold rounded-xl border border-emerald-900/50 px-2.5 py-1.5 pr-7 appearance-none cursor-pointer hover:border-emerald-700 focus:outline-none"
                     title="Change Demo Worker Persona"
                   >
                     {currentIndustryWorkers.map(w => (
@@ -131,20 +162,10 @@ export const Navbar: React.FC = () => {
                 </div>
               )}
 
-              {/* Language Switcher */}
-              <button
-                onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 text-xs font-semibold transition"
-                title="Switch Language"
-              >
-                <Globe className="w-3.5 h-3.5 text-teal-400" />
-                <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
-              </button>
-
               {/* Reset Demo Data Button */}
               <button
                 onClick={() => setShowResetModal(true)}
-                className="p-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-900/50 transition"
+                className="p-2 rounded-xl bg-slate-900 text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-900/50 transition"
                 title="Reset Demo Data"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -154,16 +175,22 @@ export const Navbar: React.FC = () => {
         </div>
       </header>
 
+      {/* Language Selector Modal */}
+      <LanguageModal
+        isOpen={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
+
       {/* Reset Confirmation Modal */}
       {showResetModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-150">
-            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
               <AlertCircle className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Reset Demo State?</h3>
             <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-              This will reset all attendance shifts, safety incident reports, and fairness threshold settings back to the clean competition seed data.
+              {t.resetConfirm}
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
